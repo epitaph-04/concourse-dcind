@@ -11,6 +11,12 @@ RUN apk --update --no-cache add \
         curl \
         device-mapper \
         py-pip \
+        python-dev \
+        libffi-dev \
+        openssl-dev \
+        gcc \
+        libc-dev \
+        make \
         iptables \
         util-linux \
         ca-certificates \
