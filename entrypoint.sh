@@ -161,7 +161,8 @@ stop_docker() {
 }
 
 function stop_docker_compose() {
-  docker-compose down
+  docker-compose down || true
+  docker volume rm $(docker volume ls -q) || true
   stop_docker
 }
 
