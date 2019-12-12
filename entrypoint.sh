@@ -31,12 +31,12 @@ sanitize_cgroups() {
   export container=docker
 
   # Mount /sys/kernel/security
-  #if [[ -d /sys/kernel/security ]] && ! mountpoint -q /sys/kernel/security; then
-  #  if ! mount -t securityfs none /sys/kernel/security; then
-  #    echo >&2 "Could not mount /sys/kernel/security."
-  #    echo >&2 "AppArmor detection and --privileged mode might break."
-  #  fi
-  #fi
+  if [[ -d /sys/kernel/security ]] && ! mountpoint -q /sys/kernel/security; then
+    if ! mount -t securityfs none /sys/kernel/security; then
+      echo >&2 "Could not mount /sys/kernel/security."
+      echo >&2 "AppArmor detection and --privileged mode might break."
+    fi
+  fi
 
   sed -e 1d /proc/cgroups | while read sys hierarchy num enabled; do
     if [[ "${enabled}" != "1" ]]; then
@@ -74,7 +74,7 @@ sanitize_cgroups() {
   # Workaround for https://github.com/docker/for-linux/issues/219
   if ! [[ -d /sys/fs/cgroup/systemd ]]; then
     mkdir "${cgroup}/systemd"
-    mount -t cgroup -o none,name=systemd none "${cgroup}/systemd"
+    mount -t cgroup -o none,name=systemd cgroup "${cgroup}/systemd"
   fi
 }
 
